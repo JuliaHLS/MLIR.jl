@@ -2,6 +2,7 @@ struct Type
     type::API.MlirType
 
     function Type(type)
+        println("In the type constructor, using: ", type)
         @assert !mlirIsNull(type) "cannot create Type with null MlirType"
         return new(type)
     end
@@ -578,9 +579,11 @@ Creates a tuple type that consists of the given list of elemental types. The typ
 Type(elements::Vector{Type}; context::Context=context()) =
     Type(API.mlirTupleTypeGet(context, length(elements), pointer(elements)))
 function Type(@nospecialize(elements::NTuple{N,Type}); context::Context=context()) where {N}
+    println("specialise 1")
     return Type(collect(elements); context)
 end
 function Type(T::Core.Type{<:Tuple}; context::Context=context())
+    println("specialise 2")
     return Type(map(Type, T.parameters); context)
 end
 
