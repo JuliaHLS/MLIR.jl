@@ -7477,36 +7477,36 @@ end
 `barrier`
 
 """
-function barrier(
-    barrierId=nothing::Union{Nothing,Value};
-    numberOfThreads=nothing::Union{Nothing,Value},
-    location=Location(),
-)
-    _results = IR.Type[]
-    _operands = Value[]
-    _owned_regions = Region[]
-    _successors = Block[]
-    _attributes = NamedAttribute[]
-    !isnothing(barrierId) && push!(_operands, barrierId)
-    !isnothing(numberOfThreads) && push!(_operands, numberOfThreads)
-    push!(
-        _attributes,
-        operandsegmentsizes([
-            isnothing(barrierId) ? 0 : 1, isnothing(numberOfThreads) ? 0 : 1
-        ]),
-    )
+# function barrier(
+#     barrierId=nothing::Union{Nothing,Value};
+#     numberOfThreads=nothing::Union{Nothing,Value},
+#     location=Location(),
+# )
+#     _results = IR.Type[]
+#     _operands = Value[]
+#     _owned_regions = Region[]
+#     _successors = Block[]
+#     _attributes = NamedAttribute[]
+#     !isnothing(barrierId) && push!(_operands, barrierId)
+#     !isnothing(numberOfThreads) && push!(_operands, numberOfThreads)
+#     push!(
+#         _attributes,
+#         operandsegmentsizes([
+#             isnothing(barrierId) ? 0 : 1, isnothing(numberOfThreads) ? 0 : 1
+#         ]),
+#     )
 
-    return IR.create_operation(
-        "nvvm.barrier",
-        location;
-        operands=_operands,
-        owned_regions=_owned_regions,
-        successors=_successors,
-        attributes=_attributes,
-        results=_results,
-        result_inference=false,
-    )
-end
+#     return IR.create_operation(
+#         "nvvm.barrier",
+#         location;
+#         operands=_operands,
+#         owned_regions=_owned_regions,
+#         successors=_successors,
+#         attributes=_attributes,
+#         results=_results,
+#         result_inference=false,
+#     )
+# end
 
 """
 `read_ptx_sreg_ntid_x`
