@@ -239,6 +239,7 @@ function _pass_run(rawop, external_pass, handle::ExternalPassHandle)
     op = Operation(rawop, false)
     activate!(handle.ctx)
     try
+        println("PASS: $(handle.pass)")
         pass_run(handle.pass, op)
     catch ex
         @error "Something went wrong running pass" exception = (ex, catch_backtrace())
