@@ -211,17 +211,14 @@ mlirLogicalResultFailure() = API.MlirLogicalResult(zero(Int8))
 
 
 function _pass_construct(ptr::ExternalPassHandle)
-    println("CONSTRUCTING PASS")
     return nothing
 end
 
 function _pass_destruct(ptr::ExternalPassHandle)
-    println("DELETING PASS")
     return nothing
 end
 
 function _pass_initialize(ctx, handle::ExternalPassHandle)
-    println("INITIALISING")
     try
         handle.ctx = Context(ctx)
         # API.Types.MlirLogicalResult(0)
@@ -234,13 +231,11 @@ function _pass_initialize(ctx, handle::ExternalPassHandle)
 end
 
 function _pass_clone(handle::ExternalPassHandle)
-    println("CLONING")
-    println("pass: ", handle.pass)
     ExternalPassHandle(handle.ctx, deepcopy(handle.pass))
 end
 
 function _pass_run(rawop, external_pass, handle::ExternalPassHandle)
-    println("RUNNING PASS################################################")
+    println("RUNNING PASS")
     op = Operation(rawop, false)
     activate!(handle.ctx)
     try
