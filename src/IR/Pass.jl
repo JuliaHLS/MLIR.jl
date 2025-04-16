@@ -205,34 +205,51 @@ function pass_run(::Context, ::P, op) where {P<:AbstractPass}
     return error("pass $P does not implement `MLIR.pass_run`")
 end
 
+mlirLogicalResultSuccess() = API.MlirLogicalResult(one(Int8))
+mlirLogicalResultFailure() = API.MlirLogicalResult(zero(Int8))
+
+
+
 function _pass_construct(ptr::ExternalPassHandle)
+    println("CONSTRUCTING PASS")
     return nothing
 end
 
 function _pass_destruct(ptr::ExternalPassHandle)
+    println("DELETING PASS")
     return nothing
 end
 
 function _pass_initialize(ctx, handle::ExternalPassHandle)
+    println("INITIALISING")
     try
         handle.ctx = Context(ctx)
-        success()
+        # API.Types.MlirLogicalResult(0)
+        # IR.Mli
+        # IR.success()
+        mlirLogicalResultSuccess()
     catch
-        failure()
+        mlirLogicalResultFailure()
     end
 end
 
 function _pass_clone(handle::ExternalPassHandle)
-    return ExternalPassHandle(handle.ctx, deepcopy(handle.pass))
+    println("CLONING")
+    println("pass: ", handle.pass)
+    ExternalPassHandle(handle.ctx, deepcopy(handle.pass))
 end
 
 function _pass_run(rawop, external_pass, handle::ExternalPassHandle)
+    println("RUNNING PASS################################################")
     op = Operation(rawop, false)
+    activate!(handle.ctx)
     try
-        pass_run(handle.ctx, handle.pass, op)
+        pass_run(handle.pass, op)
     catch ex
         @error "Something went wrong running pass" exception = (ex, catch_backtrace())
         API.mlirExternalPassSignalFailure(external_pass)
+    finally
+        deactivate!(handle.ctx)
     end
     return nothing
 end
@@ -257,7 +274,7 @@ function create_external_pass!(
         @cfunction(_pass_destruct, Cvoid, (Any,)),
         @cfunction(_pass_initialize, API.MlirLogicalResult, (API.MlirContext, Any)),
         @cfunction(_pass_clone, Any, (Any,)),
-        @cfunction(_pass_run, Cvoid, (API.MlirOperation, API.MlirExternalPass, Any))
+        @cfunction(_pass_run, Cvoid, (API.Types.MlirOperation, API.MlirExternalPass, Any))
     )
     pass_handle = manager.passes[passid] = ExternalPassHandle(nothing, pass)
     userdata = Base.pointer_from_objref(pass_handle)

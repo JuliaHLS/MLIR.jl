@@ -12,7 +12,7 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
 CEnum = "0.4"
-MLIR_jll = "18"
+MLIR_jll = "19"
 Preferences = "1"
 ScopedValues = "1"
 StaticArrays = "1.9.13"
