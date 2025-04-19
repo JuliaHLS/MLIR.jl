@@ -2155,12 +2155,12 @@ end
 
 Permutes the dimensions based on perm.
 """
-function transpose(input1::Value, perms::Value; output::IR.Type, location=Location())
+function transpose(input1::Value, perms::NamedAttribute; output::IR.Type, location=Location())
     _results = IR.Type[output,]
-    _operands = Value[input1, perms]
+    _operands = Value[input1]
     _owned_regions = Region[]
     _successors = Block[]
-    _attributes = NamedAttribute[]
+    _attributes = NamedAttribute[perms]
 
     return IR.create_operation(
         "tosa.transpose",
