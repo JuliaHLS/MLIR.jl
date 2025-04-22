@@ -572,7 +572,7 @@ function gather(
     source::Value,
     indices::Value;
     result::IR.Type,
-    gather_dims,
+    gather_dims::Attribute,
     unique=nothing,
     location=Location(),
 )
