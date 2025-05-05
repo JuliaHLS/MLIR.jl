@@ -472,7 +472,7 @@ function const_(; output=nothing::Union{Nothing,IR.Type}, value, location=Locati
     _operands = Value[]
     _owned_regions = Region[]
     _successors = Block[]
-    _attributes = NamedAttribute[namedattribute("value", value),]
+    _attributes = NamedAttribute[namedattribute("values", value),]
     !isnothing(output) && push!(_results, output)
 
     return IR.create_operation(
@@ -1224,15 +1224,15 @@ be activations, rather than reserving weights as an attribute in the
 FULLY_CONNECTED operator.
 """
 function matmul(
-    a::Value, b::Value; c::IR.Type, quantization_info=nothing, location=Location()
+    a::Value, b::Value; c::IR.Type, a_zp::Value, b_zp::Value, location=Location()
 )
     _results = IR.Type[c,]
-    _operands = Value[a, b]
+    _operands = Value[a, b, a_zp, b_zp]
     _owned_regions = Region[]
     _successors = Block[]
     _attributes = NamedAttribute[]
-    !isnothing(quantization_info) &&
-        push!(_attributes, namedattribute("quantization_info", quantization_info))
+    # !isnothing(quantization_info) &&
+    #     push!(_attributes, namedattribute("quantization_info", quantization_info))
 
     return IR.create_operation(
         "tosa.matmul",

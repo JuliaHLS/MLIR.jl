@@ -235,6 +235,10 @@ function _pass_clone(handle::ExternalPassHandle)
 end
 
 function _pass_run(rawop, external_pass, handle::ExternalPassHandle)
+    if handle.ctx == nothing
+        error("Failed to run external pass, external pass handle ctx is a nullptr")
+    end
+
     println("RUNNING PASS")
     op = Operation(rawop, false)
     activate!(handle.ctx)
